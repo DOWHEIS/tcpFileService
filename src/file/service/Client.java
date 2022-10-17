@@ -18,11 +18,11 @@ public class Client {
                 client.sendCommandToServer(socket, command);
                 switch(command) {
                     case "upload":
-                        filePath = client.getFilePath();
+                        filePath = client.getFilePath("ClientFiles/UploadedFiles/");
                         client.upload(socket, filePath);
                         break;
                     case "download":
-                        filePath = client.getFilePath();
+                        filePath = client.getFilePath("ServerFiles/UploadedFiles/");
                         client.sendCommandToServer(socket, filePath);
                         client.download(socket);
                         break;
@@ -52,10 +52,10 @@ public class Client {
         return scanner.nextLine();
     }
 
-    private String getFilePath() {
+    private String getFilePath(String basePath) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter file path:");
-        return scanner.nextLine();
+        System.out.println("Enter file name:");
+        return basePath + scanner.nextLine();
     }
 
 
@@ -81,7 +81,7 @@ public class Client {
 
     private void download(Socket socket) throws IOException {
         BufferedInputStream bufferedInputStream = new BufferedInputStream(socket.getInputStream());
-        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream("clientDownloadedFromSerer.txt"));
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream("ClientFiles/DownloadedFiles/clientDownloadedFromSerer.txt"));
 
         byte[] bytes = new byte[8000];
         int length;
@@ -92,7 +92,7 @@ public class Client {
         bufferedOutputStream.close();
         bufferedInputStream.close();
         socket.close();
-        System.out.println("Downloadsucceeded");
+        System.out.println("Download succeeded");
     }
 
 }

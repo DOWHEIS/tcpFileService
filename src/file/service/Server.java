@@ -80,7 +80,7 @@ public class Server {
 
     public void upload(Socket server) throws IOException {
         BufferedInputStream bufferedInputStream = new BufferedInputStream(server.getInputStream());
-        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream("clientUploadedServer.txt"));
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream("ServerFiles/UploadedFiles/clientUploadedServer.txt"));
 
         byte[] bytes = new byte[8000];
         int length;
