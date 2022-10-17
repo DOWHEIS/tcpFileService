@@ -39,7 +39,8 @@ public class Server {
                         server.upload(socket);
                         break;
                     case "download":
-                        server.download("testcopy.txt", socket);
+                        String filePath = reader.readLine();
+                        server.download(filePath, socket);
                         break;
                     case "delete":
                         break;

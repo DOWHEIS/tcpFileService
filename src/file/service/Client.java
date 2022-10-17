@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class Client {
     public static void main(String[] args) throws IOException {
         Client client = new Client();
+        String filePath;
         try {
             Socket socket = new Socket(InetAddress.getByName("localhost"), 6000);
             loop: while(true) {
@@ -17,10 +18,12 @@ public class Client {
                 client.sendCommandToServer(socket, command);
                 switch(command) {
                     case "upload":
-                        String filePath = client.getFilePath();
+                        filePath = client.getFilePath();
                         client.upload(socket, filePath);
                         break;
                     case "download":
+                        filePath = client.getFilePath();
+                        client.sendCommandToServer(socket, filePath);
                         client.download(socket);
                         break;
                     case "delete":
@@ -78,7 +81,7 @@ public class Client {
 
     private void download(Socket socket) throws IOException {
         BufferedInputStream bufferedInputStream = new BufferedInputStream(socket.getInputStream());
-        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream("testcopyClient.txt"));
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream("clientDownloadedFromSerer.txt"));
 
         byte[] bytes = new byte[8000];
         int length;
@@ -91,4 +94,5 @@ public class Client {
         socket.close();
         System.out.println("Downloadsucceeded");
     }
+
 }
