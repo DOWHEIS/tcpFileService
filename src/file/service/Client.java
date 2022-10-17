@@ -1,12 +1,8 @@
-package filedownload;
+package file.service;
 
 import java.io.*;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
