@@ -32,7 +32,7 @@ public class Server {
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
             String command = reader.readLine();
-            System.out.println(command);
+            System.out.println("Command: " + command);
             switch(command) {
                 case "upload":
                     server.upload();
@@ -54,7 +54,6 @@ public class Server {
     }
 
     private void download(String filePath) throws IOException {
-        System.out.println("downloadserver");
         Socket server = serverSocket.accept();
         BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(filePath));
         BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(server.getOutputStream());
@@ -85,4 +84,6 @@ public class Server {
         server.close();
         System.out.println("Upload succeeded");
     }
+
+
 }

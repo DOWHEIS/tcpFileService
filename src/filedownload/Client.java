@@ -5,6 +5,8 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
@@ -16,9 +18,7 @@ public class Client {
             Socket socket = new Socket(InetAddress.getByName("localhost"), 6000);
             loop: while(true) {
                 String command = client.getCommand();
-                OutputStream output = socket.getOutputStream();
-                PrintWriter writer = new PrintWriter(output, true);
-                writer.println(command);
+                client.sendCommandToServer(socket, command);
                 switch(command) {
                     case "upload":
                         String filePath = client.getFilePath();
@@ -74,8 +74,13 @@ public class Client {
         bufferedInputStream.close();
     }
 
+    private void sendCommandToServer(Socket socket, String command) throws IOException {
+        OutputStream output = socket.getOutputStream();
+        PrintWriter writer = new PrintWriter(output, true);
+        writer.println(command);
+    }
+
     private void download(Socket socket) throws IOException {
-        System.out.println("download");
         BufferedInputStream bufferedInputStream = new BufferedInputStream(socket.getInputStream());
         BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream("testcopyClient.txt"));
 
