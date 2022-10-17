@@ -11,6 +11,7 @@ public class Client {
     public static void main(String[] args) throws IOException {
         Client client = new Client();
         String filePath;
+        String fileName;
         try {
             Socket socket = new Socket(InetAddress.getByName("localhost"), 6000);
             loop: while(true) {
@@ -18,13 +19,16 @@ public class Client {
                 client.sendCommandToServer(socket, command);
                 switch(command) {
                     case "upload":
-                        filePath = client.getFilePath("ClientFiles/UploadedFiles/");
+                        fileName = client.getFileName();
+                        filePath = "ClientFiles/UploadedFiles/" + fileName;
+                        client.sendCommandToServer(socket, fileName);
                         client.upload(socket, filePath);
                         break;
                     case "download":
-                        filePath = client.getFilePath("ServerFiles/UploadedFiles/");
+                        fileName = client.getFileName();
+                        filePath = "ServerFiles/UploadedFiles/" + fileName;
                         client.sendCommandToServer(socket, filePath);
-                        client.download(socket);
+                        client.download(socket, fileName);
                         break;
                     case "delete":
                         break;
@@ -52,10 +56,10 @@ public class Client {
         return scanner.nextLine();
     }
 
-    private String getFilePath(String basePath) {
+    private String getFileName() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter file name:");
-        return basePath + scanner.nextLine();
+        return scanner.nextLine();
     }
 
 
@@ -79,9 +83,9 @@ public class Client {
         writer.println(command);
     }
 
-    private void download(Socket socket) throws IOException {
+    private void download(Socket socket, String fileName) throws IOException {
         BufferedInputStream bufferedInputStream = new BufferedInputStream(socket.getInputStream());
-        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream("ClientFiles/DownloadedFiles/clientDownloadedFromSerer.txt"));
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream("ClientFiles/DownloadedFiles/" + fileName));
 
         byte[] bytes = new byte[8000];
         int length;

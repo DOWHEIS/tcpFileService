@@ -36,7 +36,8 @@ public class Server {
                 System.out.println("Command: " + command);
                 switch(command) {
                     case "upload":
-                        server.upload(socket);
+                        String fileName = reader.readLine();
+                        server.upload(socket, fileName);
                         break;
                     case "download":
                         String filePath = reader.readLine();
@@ -78,7 +79,7 @@ public class Server {
 
     }
 
-    public void upload(Socket server) throws IOException {
+    public void upload(Socket server, String fileName) throws IOException {
         BufferedInputStream bufferedInputStream = new BufferedInputStream(server.getInputStream());
         BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream("ServerFiles/UploadedFiles/clientUploadedServer.txt"));
 
