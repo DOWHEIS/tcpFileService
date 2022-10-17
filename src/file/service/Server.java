@@ -81,7 +81,7 @@ public class Server {
 
     public void upload(Socket server, String fileName) throws IOException {
         BufferedInputStream bufferedInputStream = new BufferedInputStream(server.getInputStream());
-        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream("ServerFiles/UploadedFiles/clientUploadedServer.txt"));
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream("ServerFiles/UploadedFiles/" + fileName));
 
         byte[] bytes = new byte[8000];
         int length;
