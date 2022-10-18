@@ -8,16 +8,17 @@ import java.nio.file.Paths;
 
 public class Server {
     private ServerSocket serverSocket;
+
     public Server(int port) throws IOException {
         serverSocket = new ServerSocket(port);
     }
 
-    public static void main(String[] args) throws IOException {
-        int port= 6000;
+    public static void main(String[] args)  {
+        int port = 6000;
         try {
             Server server = new Server(port);
             server.service(server);
-        } catch(IOException e) {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
@@ -25,7 +26,8 @@ public class Server {
 
     private void service(Server server) {
         try {
-            loop: while(true) {
+            loop:
+            while (true) {
                 Socket socket = serverSocket.accept();
                 System.out.println("Connected");
 
@@ -34,9 +36,10 @@ public class Server {
 
                 String command = reader.readLine();
                 System.out.println("Command: " + command);
-                switch(command) {
+                String fileName;
+                switch (command) {
                     case "upload":
-                        String fileName = reader.readLine();
+                        fileName = reader.readLine();
                         server.upload(socket, fileName);
                         break;
                     case "download":
@@ -44,18 +47,20 @@ public class Server {
                         server.download(filePath, socket);
                         break;
                     case "delete":
+                        fileName = reader.readLine();
+                        server.delete(socket, fileName);
                         break;
                     case "rename":
                         break;
                     case "list":
                         break;
                     case "quit":
-                        socket.close();
+                        serverSocket.close();
                         break loop;
                 }
 
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
@@ -67,12 +72,13 @@ public class Server {
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(server.getOutputStream());
             byte[] bytes = Files.readAllBytes(Paths.get(filePath));
             int length;
-            while((length = bufferedInputStream.read(bytes)) != -1) {
+            while ((length = bufferedInputStream.read(bytes)) != -1) {
                 bufferedOutputStream.write(bytes, 0, length);
                 bufferedOutputStream.flush();
             }
             bufferedOutputStream.close();
             bufferedInputStream.close();
+            this.sendMessageToClient(server, "Server: File sent!");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -88,10 +94,32 @@ public class Server {
         while ((length = bufferedInputStream.read(bytes)) != -1) {
             bufferedOutputStream.write(bytes, 0, length);
         }
-
         bufferedOutputStream.close();
         bufferedInputStream.close();
-        System.out.println("Upload succeeded");
+        this.sendMessageToClient(server, "Server: " + fileName + " uploaded!");
+    }
+
+    private void delete(Socket server, String fileName) {
+
+        File fileToDelete = new File("ServerFiles/UploadedFiles/" + fileName);
+
+        if (fileToDelete.delete()) {
+            this.sendMessageToClient(server, "Server: " + fileName + " deleted!");
+        } else {
+            this.sendMessageToClient(server, "Server: Failed to delete " + fileName);
+        }
+
+    }
+
+    private void sendMessageToClient(Socket server, String message) {
+        try {
+            OutputStream output = server.getOutputStream();
+            PrintWriter writer = new PrintWriter(output, true);
+            writer.println(message);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
 

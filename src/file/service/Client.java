@@ -8,14 +8,15 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Client {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Client client = new Client();
         String filePath;
         String fileName;
         try {
-            Socket socket = new Socket(InetAddress.getByName("localhost"), 6000);
             loop: while(true) {
+                Socket socket = new Socket(InetAddress.getByName("localhost"), 6000);
                 String command = client.getCommand();
+                String response;
                 client.sendCommandToServer(socket, command);
                 switch(command) {
                     case "upload":
@@ -23,21 +24,26 @@ public class Client {
                         filePath = "ClientFiles/UploadedFiles/" + fileName;
                         client.sendCommandToServer(socket, fileName);
                         client.upload(socket, filePath);
-                        break;
+                        response = client.getMessageFromServer(socket);
+                        System.out.println(response);
                     case "download":
                         fileName = client.getFileName();
                         filePath = "ServerFiles/UploadedFiles/" + fileName;
                         client.sendCommandToServer(socket, filePath);
                         client.download(socket, fileName);
-                        break;
+                        response = client.getMessageFromServer(socket);
+                        System.out.println(response);
                     case "delete":
-                        break;
+                        fileName= client.getFileName();
+                        client.sendCommandToServer(socket, fileName);
+                        response = client.getMessageFromServer(socket);
+                        System.out.println(response);
                     case "rename":
                         break;
                     case "list":
                         break;
                     case "quit":
-                        break loop;
+                        socket.close();
                     case "":
                 }
             }
@@ -48,6 +54,12 @@ public class Client {
         }
 
 
+    }
+
+    private String getMessageFromServer(Socket socket) throws IOException {
+        InputStream input = socket.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        return reader.readLine();
     }
 
     private String getCommand() {
@@ -73,7 +85,6 @@ public class Client {
             bufferedOutputStream.flush();
         }
         bufferedOutputStream.close();
-        socket.close();
         bufferedInputStream.close();
     }
 
@@ -95,8 +106,6 @@ public class Client {
 
         bufferedOutputStream.close();
         bufferedInputStream.close();
-        socket.close();
-        System.out.println("Download succeeded");
     }
 
 }
