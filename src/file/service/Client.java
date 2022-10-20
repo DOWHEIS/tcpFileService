@@ -12,6 +12,7 @@ public class Client {
         Client client = new Client();
         String filePath;
         String fileName;
+        String newFileName;
         try {
             loop: while(true) {
                 Socket socket = new Socket(InetAddress.getByName("localhost"), 6000);
@@ -41,7 +42,9 @@ public class Client {
                     case "rename":
                         break;
                     case "list":
-                        break;
+                        client.list(socket);
+                        response = client.getMessageFromServer(socket);
+                        System.out.println(response);
                     case "quit":
                         socket.close();
                     case "":
@@ -73,6 +76,13 @@ public class Client {
         System.out.println("Enter file name:");
         return scanner.nextLine();
     }
+
+    private String getNewFileName() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter file name:");
+        return scanner.nextLine();
+    }
+
 
 
     private void upload(Socket socket, String filePath) throws IOException {
@@ -107,5 +117,23 @@ public class Client {
         bufferedOutputStream.close();
         bufferedInputStream.close();
     }
+    private void list(Socket socket) throws IOException {
+        InputStream input = socket.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
+
+        }
+        input.close();
+        reader.close();
+        System.out.println("Listed all current files");
+
+
+
+    }
+
 
 }

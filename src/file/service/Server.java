@@ -53,6 +53,7 @@ public class Server {
                     case "rename":
                         break;
                     case "list":
+                        server.list(socket);
                         break;
                     case "quit":
                         serverSocket.close();
@@ -119,6 +120,25 @@ public class Server {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+
+    }
+    public void list (Socket socket) throws IOException {
+        OutputStream output = socket.getOutputStream();
+        PrintWriter writer = new PrintWriter(output, true);
+        String path = "ClientFiles/UploadedFiles/";
+        File directory = new File(path);
+        String[] fileList = directory.list();
+        for (int i = 0; i<fileList.length; i++) {
+            System.out.println("-".repeat(24));
+            writer.println("|" + fileList[i] + "|");
+            System.out.println("-".repeat(24));
+
+        }
+        output.close();
+        writer.close();
+        System.out.println("\nListed all current files");
+
+
 
     }
 
