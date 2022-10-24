@@ -53,7 +53,7 @@ public class Server {
                         break;
                     case "list":
                         server.list(socket);
-                        break;
+//                        break;
                     case "quit":
                         serverSocket.close();
                         break loop;
@@ -83,7 +83,7 @@ public class Server {
 
             bufferedInputStream.close();
             bufferedOutputStream.close();
-            this.sendMessageToClient(server, "Server: File sent!");
+//            this.sendMessageToClient(server, "Server: File sent!");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -130,15 +130,18 @@ public class Server {
     public void list (Socket socket) throws IOException {
         OutputStream output = socket.getOutputStream();
         PrintWriter writer = new PrintWriter(output, true);
-        String path = "ClientFiles/UploadedFiles/";
+        String path = "ServerFiles/UploadedFiles/";
         File directory = new File(path);
         String[] fileList = directory.list();
-        for (int i = 0; i<fileList.length; i++) {
-            System.out.println("-".repeat(24));
-            writer.println("|" + fileList[i] + "|");
-            System.out.println("-".repeat(24));
+        StringBuilder messageToClient = new StringBuilder();
+        if(fileList!=null)
+        for (String s : fileList) {
+//            System.out.println("-".repeat(24));
+            messageToClient.append(s).append(", ");
+//            System.out.println("-".repeat(24));
 
         }
+        writer.println(messageToClient);
         output.close();
         writer.close();
         System.out.println("\nListed all current files");

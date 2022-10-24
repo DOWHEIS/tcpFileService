@@ -14,9 +14,9 @@ public class Client {
         String fileName;
 
 
-        loop:
-        while (true) {
-            try {
+        try {
+            loop:
+            while (true) {
                 Socket socket = new Socket(InetAddress.getByName("localhost"), 6000);
                 String command = client.getCommand();
                 client.sendCommandToServer(socket, command);
@@ -32,8 +32,8 @@ public class Client {
                         filePath = "ServerFiles/UploadedFiles/" + fileName;
                         client.sendCommandToServer(socket, filePath);
                         client.download(socket, fileName);
-                        break;
 //                        client.getMessageFromServer(socket);
+                        break;
                     case "delete":
                         fileName = client.getFileName();
                         client.sendCommandToServer(socket, fileName);
@@ -41,7 +41,7 @@ public class Client {
                     case "rename":
                         break;
                     case "list":
-                        break;
+                        client.getMessageFromServer(socket);
                     case "quit":
                         socket.close();
                         break loop;
@@ -49,19 +49,20 @@ public class Client {
                         client.getMessageFromServer(socket);
                         break;
                 }
-            } catch(IOException e) {
-                System.out.println(e.getMessage());
+
             }
-
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
-
-
     }
 
     private void getMessageFromServer(Socket socket) throws IOException {
+
         InputStream input = socket.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
         System.out.println(reader.readLine());
+
+
     }
 
     private String getCommand() {
@@ -108,7 +109,7 @@ public class Client {
 
             byte[] bytes = new byte[8000];
             int length;
-            while ((length = bufferedInputStream.read(bytes)) != -1 ) {
+            while ((length = bufferedInputStream.read(bytes)) != -1) {
                 bufferedOutputStream.write(bytes, 0, length);
             }
 
