@@ -13,7 +13,7 @@ public class Server {
         serverSocket = new ServerSocket(port);
     }
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         int port = 6000;
         try {
             Server server = new Server(port);
@@ -25,9 +25,10 @@ public class Server {
     }
 
     private void service(Server server) {
-        try {
-            loop:
-            while (true) {
+
+        loop:
+        while (true) {
+            try {
                 Socket socket = serverSocket.accept();
                 System.out.println("Connected");
 
@@ -41,11 +42,9 @@ public class Server {
                     case "upload":
                         fileName = reader.readLine();
                         server.upload(socket, fileName);
-                        break;
                     case "download":
                         String filePath = reader.readLine();
                         server.download(filePath, socket);
-                        break;
                     case "delete":
                         fileName = reader.readLine();
                         server.delete(socket, fileName);
@@ -58,12 +57,15 @@ public class Server {
                     case "quit":
                         serverSocket.close();
                         break loop;
+                    default:
+                        server.sendMessageToClient(socket, "Server: Invalid command");
+                        break;
                 }
-
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
             }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
         }
+
 
     }
 
@@ -77,8 +79,10 @@ public class Server {
                 bufferedOutputStream.write(bytes, 0, length);
                 bufferedOutputStream.flush();
             }
-            bufferedOutputStream.close();
+//            bufferedOutputStream.write((byte)'|');
+
             bufferedInputStream.close();
+            bufferedOutputStream.close();
             this.sendMessageToClient(server, "Server: File sent!");
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -114,6 +118,7 @@ public class Server {
 
     private void sendMessageToClient(Socket server, String message) {
         try {
+//            serverSocket.accept();
             OutputStream output = server.getOutputStream();
             PrintWriter writer = new PrintWriter(output, true);
             writer.println(message);
