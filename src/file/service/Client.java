@@ -14,9 +14,9 @@ public class Client {
         String fileName;
 
 
-        try {
-            loop:
-            while (true) {
+        loop:
+        while (true) {
+            try {
                 Socket socket = new Socket(InetAddress.getByName("localhost"), 6000);
                 String command = client.getCommand();
                 client.sendCommandToServer(socket, command);
@@ -42,6 +42,7 @@ public class Client {
                         break;
                     case "list":
                         client.list(socket);
+                        break;
 //                        client.getMessageFromServer(socket);
                     case "quit":
                         socket.close();
@@ -50,11 +51,13 @@ public class Client {
                         client.getMessageFromServer(socket);
                         break;
                 }
-
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
             }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+
+
         }
+
     }
 
     private void getMessageFromServer(Socket socket) throws IOException {
@@ -122,19 +125,26 @@ public class Client {
 
     }
 
-    private void list(Socket socket) throws IOException {
-        InputStream input = socket.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+    private void list(Socket socket) {
+        try {
+            InputStream input = socket.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
-        String line;
+            String line;
 
-        while ((line = reader.readLine()) != null) {
-            System.out.println(line);
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
 
+            }
+            input.close();
+            reader.close();
+            System.out.println("Listed all current files");
+
+        } catch(IOException e) {
+            System.out.println(e.getMessage());
         }
-        input.close();
-        reader.close();
-        System.out.println("Listed all current files");
+
+
     }
 
 }

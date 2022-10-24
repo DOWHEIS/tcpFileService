@@ -53,7 +53,7 @@ public class Server {
                         break;
                     case "list":
                         server.list(socket);
-//                        break;
+                        break;
                     case "quit":
                         serverSocket.close();
                         break loop;
@@ -79,11 +79,9 @@ public class Server {
                 bufferedOutputStream.write(bytes, 0, length);
                 bufferedOutputStream.flush();
             }
-//            bufferedOutputStream.write((byte)'|');
 
             bufferedInputStream.close();
             bufferedOutputStream.close();
-//            this.sendMessageToClient(server, "Server: File sent!");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -127,7 +125,7 @@ public class Server {
         }
 
     }
-    public void list (Socket socket) throws IOException {
+    private void list (Socket socket) throws IOException {
         OutputStream output = socket.getOutputStream();
         PrintWriter writer = new PrintWriter(output, true);
         String path = "ServerFiles/UploadedFiles/";
