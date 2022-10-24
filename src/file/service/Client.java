@@ -41,7 +41,8 @@ public class Client {
                     case "rename":
                         break;
                     case "list":
-                        client.getMessageFromServer(socket);
+                        client.list(socket);
+//                        client.getMessageFromServer(socket);
                     case "quit":
                         socket.close();
                         break loop;
@@ -119,6 +120,21 @@ public class Client {
             System.out.println(e.getMessage());
         }
 
+    }
+
+    private void list(Socket socket) throws IOException {
+        InputStream input = socket.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
+
+        }
+        input.close();
+        reader.close();
+        System.out.println("Listed all current files");
     }
 
 }

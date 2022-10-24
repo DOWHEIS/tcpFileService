@@ -130,18 +130,15 @@ public class Server {
     public void list (Socket socket) throws IOException {
         OutputStream output = socket.getOutputStream();
         PrintWriter writer = new PrintWriter(output, true);
-        String path = "ServerFiles/UploadedFiles/";
+        String path = "ClientFiles/UploadedFiles/";
         File directory = new File(path);
         String[] fileList = directory.list();
-        StringBuilder messageToClient = new StringBuilder();
-        if(fileList!=null)
-        for (String s : fileList) {
-//            System.out.println("-".repeat(24));
-            messageToClient.append(s).append(", ");
-//            System.out.println("-".repeat(24));
+        for (int i = 0; i<fileList.length; i++) {
+            System.out.println("-".repeat(24));
+            writer.println("|" + fileList[i] + "|");
+            System.out.println("-".repeat(24));
 
         }
-        writer.println(messageToClient);
         output.close();
         writer.close();
         System.out.println("\nListed all current files");
