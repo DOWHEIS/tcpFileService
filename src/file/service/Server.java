@@ -50,6 +50,9 @@ public class Server {
                         server.delete(socket, fileName);
                         break;
                     case "rename":
+                        fileName = reader.readLine();
+                        String[] fileNames = fileName.split("&");
+                        server.rename(socket, fileNames[0], fileNames[1]);
                         break;
                     case "list":
                         server.list(socket);
@@ -122,6 +125,16 @@ public class Server {
             writer.println(message);
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        }
+
+    }
+    private void rename(Socket server, String fileName, String newFileName){
+        File oldFile = new File("ServerFiles/UploadedFiles/" + fileName);
+        File newFile = new File("ServerFiles/UploadedFiles/" + newFileName);
+        if (oldFile.renameTo(newFile)){
+            this.sendMessageToClient(server, "Server: " + fileName + " successfully renamed to " + newFileName);
+        }else {
+            this.sendMessageToClient(server, "Server: Failed to rename " + fileName + " to " + newFileName);
         }
 
     }

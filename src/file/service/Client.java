@@ -12,6 +12,7 @@ public class Client {
         Client client = new Client();
         String filePath;
         String fileName;
+        String newFileName;
 
 
         loop:
@@ -39,6 +40,11 @@ public class Client {
                         client.sendCommandToServer(socket, fileName);
                         client.getMessageFromServer(socket);
                     case "rename":
+                        fileName = client.getFileName();
+                        newFileName = client.getNewFileName();
+                        String fileNamesString = fileName + "&" + newFileName;
+                        client.sendCommandToServer(socket, fileNamesString);
+                        client.getMessageFromServer(socket);
                         break;
                     case "list":
                         client.list(socket);
@@ -76,6 +82,11 @@ public class Client {
     }
 
     private String getFileName() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter file name:");
+        return scanner.nextLine();
+    }
+    private String getNewFileName() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter file name:");
         return scanner.nextLine();
