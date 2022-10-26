@@ -46,9 +46,11 @@ public class Server {
                     case "upload":
                         fileName = reader.readLine();
                         server.upload(socket, fileName);
+                        break;
                     case "download":
                         String filePath = reader.readLine();
                         server.download(filePath, socket);
+                        break;
                     case "delete":
                         fileName = reader.readLine();
                         server.delete(socket, fileName);

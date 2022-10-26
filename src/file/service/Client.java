@@ -32,6 +32,7 @@ public class Client {
                         client.sendCommandToServer(socket, fileName);
                         client.upload(socket, filePath);
                         client.getMessageFromServer(socket);
+                        break;
                     case "download":
                         fileName = client.getFileName();
                         filePath = "ServerFiles/UploadedFiles/" + fileName;
@@ -54,7 +55,6 @@ public class Client {
                     case "list":
                         client.list(socket);
                         break;
-//                        client.getMessageFromServer(socket);
                     case "quit":
                         socket.close();
                         break loop;
@@ -72,12 +72,9 @@ public class Client {
     }
 
     private void getMessageFromServer(Socket socket) throws IOException {
-
         InputStream input = socket.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
         System.out.println(reader.readLine());
-
-
     }
 
     private String getCommand() {
@@ -93,7 +90,7 @@ public class Client {
     }
     private String getNewFileName() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter file name:");
+        System.out.println("Enter new file name:");
         return scanner.nextLine();
     }
 
