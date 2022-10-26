@@ -43,6 +43,7 @@ public class Client {
                         fileName = client.getFileName();
                         client.sendCommandToServer(socket, fileName);
                         client.getMessageFromServer(socket);
+                        break;
                     case "rename":
                         fileName = client.getFileName();
                         newFileName = client.getNewFileName();
