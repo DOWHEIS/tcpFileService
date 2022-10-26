@@ -9,6 +9,10 @@ import java.util.Scanner;
 
 public class Client {
     public static void main(String[] args) {
+        if(args.length != 2) {
+            System.out.println("Syntax: Client <host> <port>");
+            return;
+        }
         Client client = new Client();
         String filePath;
         String fileName;
@@ -18,7 +22,7 @@ public class Client {
         loop:
         while (true) {
             try {
-                Socket socket = new Socket(InetAddress.getByName("localhost"), 6000);
+                Socket socket = new Socket(InetAddress.getByName(args[0]), Integer.parseInt(args[1]));
                 String command = client.getCommand();
                 client.sendCommandToServer(socket, command);
                 switch (command) {

@@ -14,7 +14,11 @@ public class Server {
     }
 
     public static void main(String[] args) {
-        int port = 6000;
+        if(args.length != 1) {
+            System.out.println("Syntax: Server <port>");
+            return;
+        }
+        int port = Integer.parseInt(args[0]);
         try {
             Server server = new Server(port);
             server.service(server);
